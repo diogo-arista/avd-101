@@ -1,0 +1,18 @@
+name: avd-tour
+
+topology:
+  kinds:
+    arista_ceos:
+      image: ceos:4.32.5.1M
+
+  nodes:
+    spine1: { kind: arista_ceos }
+    spine2: { kind: arista_ceos }
+    leaf1:  { kind: arista_ceos }
+    leaf2:  { kind: arista_ceos }
+
+  links:
+    - endpoints: [spine1:eth1, leaf1:eth1]
+    - endpoints: [spine1:eth2, leaf2:eth1]
+    - endpoints: [spine2:eth1, leaf1:eth2]
+    - endpoints: [spine2:eth2, leaf2:eth2]

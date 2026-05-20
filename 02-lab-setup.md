@@ -247,13 +247,16 @@ You should see `ceos    4.32.5.1M    <hash>    <size>`.
 
 ## 7. Build your first topology
 
-Create a tiny 2-spine, 2-leaf fabric to confirm everything works. Inside the VM:
+A minimal 2-spine, 2-leaf topology is **already in the curriculum repo** at `labs/02-first-fabric/topology.clab.yml`. Because OrbStack shares `/Users/<you>` into the VM at the same path, you can `cd` directly to it inside the VM — no typing or copying needed:
 
 ```bash
-mkdir -p ~/labs/avd-tour && cd ~/labs/avd-tour
+cd /Users/$USER/projects/avd-study/labs/02-first-fabric
+cat topology.clab.yml
 ```
 
-Create `topology.clab.yml`:
+(If you'd rather hand-type it once for the practice, the file contents are short — open it in VS Code and you can read it in 10 seconds.)
+
+The file looks like this:
 
 ```yaml
 name: avd-tour
@@ -275,6 +278,8 @@ topology:
     - endpoints: [spine2:eth1, leaf1:eth2]
     - endpoints: [spine2:eth2, leaf2:eth2]
 ```
+
+⚠ **Tag mismatch?** If your cEOS Docker tag (from §6) isn't `4.32.5.1M`, edit `topology.clab.yml` and change the `image:` line to match what `docker images | grep ceos` shows.
 
 A few things to notice:
 - **`kind`** tells containerlab what driver to use. `arista_ceos` knows how to bootstrap cEOS properly (sets the right boot env, handles the management interface, etc.).
