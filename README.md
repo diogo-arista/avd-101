@@ -84,6 +84,21 @@ If you also want the curriculum mirrored inside the OrbStack lab VM (chapter 02)
 - **⚠ Gotcha** boxes flag things that have bitten people in production.
 - **🧪 Exercise** sections at the end of each chapter are mandatory if you want the chapter to stick.
 
+## Claude Code skill
+
+This repo ships a project-level Claude Code skill at [`.claude/skills/avd/`](.claude/skills/avd/) that turns Claude into an AVD-aware assistant when you work in this directory (or any other repo where you drop the same `.claude/skills/avd/` tree). It helps with:
+
+- Editing `group_vars/` / `host_vars/` / `inventory.yml`
+- Adding common services (VLAN, tenant, MLAG pair, server connection) — pre-built YAML patterns
+- Debugging `build.yml` / `deploy.yml` / `validate.yml` failures with a symptom→cause→diagnosis triage flow
+- Mapping EOS CLI config back to AVD inputs
+- Explaining generated artifacts (`intended/configs/`, `intended/structured_configs/`, `documentation/`, `reports/`)
+- Schema lookups ("where in AVD do I configure X?")
+
+It enforces safety rails — never pushes to devices without explicit confirmation, always diffs before deploy, prefers high-level model keys over `raw_eos_cli` escape hatches.
+
+The skill activates automatically when Claude detects AVD context (project layout, AVD-specific keywords, or the user asking AVD questions). You can also invoke it explicitly via `/skill avd ...`.
+
 ## Contributing / feedback
 
 This is a personal study repo. Feel free to fork, file issues with suggestions, or submit PRs that fix typos or clarify confusing bits.
