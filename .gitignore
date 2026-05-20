@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+._*
+
+# Editor / IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# VS Code — keep shared settings if any are committed later, ignore local-only state
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Ansible
+*.retry
+.ansible/
+
+# Secrets (never commit these)
+*.pem
+*.key
+*.crt
+*_rsa
+*_ed25519
+**/secrets.yml
+**/vault.yml
+
+# Personal study notes (you may keep these locally — they're not for the public repo)
+notes/
+
+# Lab artifacts that shouldn't be tracked
+clab-*/
+*.clab.yml.bak
