@@ -83,62 +83,91 @@ whoami              # should print your macOS username (OrbStack creates a match
 
 The rest of this chapter runs **inside the OrbStack machine** unless explicitly noted.
 
-### 3e. (Optional but recommended) Set up VS Code
+### 3e. Set up VS Code (strongly recommended)
 
-You can do this whole curriculum from a plain terminal and a text editor — **VS Code is not mandatory**. But it dramatically reduces friction for the kind of work you're about to do (editing YAML inputs, reading generated configs, browsing a project tree, hopping between Mac and the Linux machine), so it's worth 5 minutes now.
+You *can* do this whole curriculum from a plain terminal and `nano`/`vim` — **VS Code is not strictly mandatory**. But for the kind of work you're about to do (editing YAML, reading generated configs, browsing a project tree, hopping between Mac and the Linux machine, and especially driving containerlab), VS Code reduces friction by an order of magnitude. The rest of the chapter assumes you've set it up.
 
-> **What's VS Code in one paragraph?** Visual Studio Code is a free, open-source code editor from Microsoft, ubiquitous in software and infrastructure work. It's a *text editor* at its core (like nano or vim) but with three things that make it especially useful here: (1) a file explorer + integrated terminal so you don't context-switch between windows, (2) **extensions** that add language support — YAML linting, Jinja2 highlighting, Ansible awareness, etc., and (3) **remote development modes** that let the editor run on your Mac while the files and tooling live somewhere else (an SSH host, an OrbStack machine, a devcontainer).
+> **What's VS Code in one paragraph?** Visual Studio Code is a free, open-source code editor from Microsoft, ubiquitous in software and infrastructure work. It's a *text editor* at its core (like nano or vim) but with three things that make it especially useful here: (1) a file explorer + integrated terminal so you don't context-switch between windows, (2) **extensions** that add language support — YAML linting, Jinja2 highlighting, Ansible awareness, containerlab topology graphs, etc., and (3) **remote development modes** that let the editor run on your Mac while the files and tooling live somewhere else (an SSH host, an OrbStack machine, a devcontainer).
 
 #### Why it matters for *this* lab specifically
 
 | Capability | What it does for you |
 |---|---|
-| **Remote - SSH** extension | Opens a folder inside the OrbStack machine as if it were local. Edits, terminals, language servers all run *in Linux*; you see the result on your Mac. No more "is this file on the Mac or in the VM?" |
+| **Remote - SSH** extension | Opens a folder inside the OrbStack machine as if it were local. Edits, terminals, language servers, and other extensions all run *in Linux*; you see the result on your Mac. Eliminates the "is this file on the Mac or in the VM?" problem. |
+| **Containerlab** extension (`srl-labs.vscode-containerlab`) | Auto-discovers your `.clab.yml` files; gives you a colour-coded sidebar of labs and nodes; right-click a lab to `deploy` / `destroy` / `redeploy` / `inspect`; right-click a node for shell / SSH / logs / packet capture; renders an **interactive topology graph** of your fabric. Once you have this, you'll rarely type `containerlab deploy` again. |
 | **Dev Containers** extension | Lets a Git repo declare its dev environment (Python version, Ansible version, pre-installed AVD collection, etc.) in a `devcontainer.json`. Anyone who clones the repo and opens it in VS Code gets the identical environment in seconds. AVD ships such a devcontainer — we'll use it in chapter 05. |
 | **YAML / Ansible / Jinja extensions** | Schema-aware completion and linting on AVD inputs, real-time error squiggles in playbooks, syntax highlighting in `.j2` templates. Saves hours of "why isn't this rendering?". |
 | **Integrated terminal** | Run `containerlab deploy`, `ansible-playbook`, `git`, `ssh` — all without leaving the editor. |
 | **Side-by-side diffs** | When AVD regenerates a `.cfg` file, the diff view shows you exactly what changed. Indispensable for code reviews. |
 
-#### Install
+#### Crucial concept: where each extension actually runs
 
-On your Mac:
+VS Code's remote-dev model splits extensions into two pots:
+
+- **Local (Mac) extensions** — pure UI/connectivity, no language tooling. They establish and manage the connection to the remote target. Example: Remote-SSH, Dev Containers.
+- **Workspace (remote) extensions** — anything that has to *read your files* or *invoke a tool*: YAML linters, Ansible, Jinja highlighters, **and the containerlab extension**. These have to run in the same OS as the files and binaries they operate on.
+
+This means: after you connect VS Code to `avdlab@orb` via Remote-SSH, you **re-install the workspace extensions inside that remote target**. VS Code makes this a one-click operation — when you open the Extensions panel in a Remote-SSH window, each extension shows where it's installed and offers an "Install in SSH: avdlab@orb" button. Skip this and the containerlab/YAML/Ansible features simply won't activate.
+
+#### Install VS Code on the Mac
 
 ```bash
 brew install --cask visual-studio-code
 ```
 
-Open VS Code once so it adds the `code` command to your PATH (or run "Shell Command: Install 'code' command in PATH" from the command palette — `Cmd+Shift+P`).
+Open VS Code once so it adds the `code` command to your `PATH` (or run **Shell Command: Install 'code' command in PATH** from the command palette — `Cmd+Shift+P`).
 
-#### Install the essential extensions
+#### Install the local (Mac) extensions
 
-From the Mac terminal:
+These are the connectivity ones. From the Mac terminal:
 
 ```bash
 code --install-extension ms-vscode-remote.remote-ssh
 code --install-extension ms-vscode-remote.remote-containers
-code --install-extension redhat.vscode-yaml
-code --install-extension redhat.ansible
-code --install-extension samuelcolvin.jinjahtml
 ```
 
 #### Connect VS Code to the OrbStack machine
 
-OrbStack auto-registers an SSH host called `orb` (you can also target a specific machine with `<machine>@orb`). Verify from the Mac terminal:
+OrbStack auto-registers an SSH host called `orb`; address a specific machine as `<machine>@orb`. Verify from the Mac terminal first:
 
 ```bash
 ssh avdlab@orb            # should drop you into the avdlab machine, no password
 ```
 
-In VS Code:
+If that works, in VS Code:
 
 1. `Cmd+Shift+P` → **Remote-SSH: Connect to Host…**
 2. Pick `avdlab@orb` (or type it if not auto-listed).
-3. A new VS Code window opens — the bottom-left corner shows `SSH: avdlab@orb` confirming you're remote.
-4. **File → Open Folder…** → e.g. `/root/labs/avd-tour` (or wherever you'll keep lab files inside the machine).
+3. A new VS Code window opens; the **bottom-left corner shows `SSH: avdlab@orb`**, confirming you're remote.
+4. **File → Open Folder…** → `/Users/<you>/projects/avd-study` (your project folder is shared into the OrbStack machine at the same path, so you'll see the curriculum repo immediately).
 
-> **Why this is the magic moment:** the file tree, the terminal (`Ctrl+`` `), the YAML lint, the git integration — they all act on files *inside the Linux machine*, but with the Mac's keyboard, theme, and fonts. This is the workflow most network automation teams use day-to-day.
+#### Install the workspace (remote) extensions
 
-We'll come back to VS Code in **chapter 05 — Devcontainers & VS Code**, where the same editor plus the Dev Containers extension picks up the AVD devcontainer and gives you a full Ansible/AVD/Python environment with zero install. For now, the Remote-SSH integration is enough.
+Now that VS Code is connected to the OrbStack machine, install the tooling extensions *into* that remote target. Easiest way is from the integrated terminal — `Ctrl+`` ` — which is already a Linux shell inside the VM:
+
+```bash
+code --install-extension srl-labs.vscode-containerlab
+code --install-extension redhat.vscode-yaml
+code --install-extension redhat.ansible
+code --install-extension samuelcolvin.jinjahtml
+```
+
+Because you ran `code` from a remote terminal, it installs into the remote VS Code server, not your Mac. Confirm by opening the Extensions panel (`Cmd+Shift+X`): each of the four should show **"Installed in SSH: avdlab@orb"**, not "Local".
+
+> **Why this is the magic moment:** from here on, every lab task — `containerlab deploy`, editing YAML, browsing the topology graph, dropping into a node's shell — runs *in the Linux machine* but you drive it from your Mac with one editor window. This is the workflow most network automation teams use day-to-day, and exactly the mental model you'll need for the devcontainer chapter (05) and the AVD chapters (14–16).
+
+#### Using the containerlab extension (preview)
+
+The first time you open a folder containing a `.clab.yml` file (we'll create one in §7), watch for the **Containerlab icon** in the VS Code Activity Bar (the vertical strip on the far left). Clicking it gives you:
+
+- A **labs sidebar** showing all detected topologies — colour-coded green (deployed), red (failed), yellow (partial), grey (not deployed).
+- **Right-click a topology** → Deploy, Destroy, Redeploy (with/without cleanup), Inspect, Save, Graph, Edit.
+- **Right-click a node** under a deployed lab → Attach Shell, SSH, View Logs, Copy Properties (name/IP/kind), Packet Capture.
+- A **graph view** that renders your topology as nodes and links — useful for sanity-checking a fabric you just wrote.
+
+The first time you trigger a privileged action, the extension will prompt to add your user to the `clab_admins` group (which we already did in §5, so it'll be a no-op confirmation).
+
+We'll come back to VS Code in **chapter 05 — Devcontainers & VS Code**, where the same editor plus the Dev Containers extension picks up the AVD devcontainer and gives you a full Ansible/AVD/Python environment with zero install. For now, the Remote-SSH + containerlab combo is what we'll use throughout the rest of this chapter.
 
 ## 4. Install Docker
 
@@ -252,11 +281,13 @@ A few things to notice:
 - **`endpoints`** are veth pairs between two device interfaces. `eth1` on a cEOS container maps to `Ethernet1` inside EOS.
 - **No management IPs specified.** containerlab puts every node on a Docker bridge (`clab` network) and gives them DHCP — typically `172.20.20.0/24`.
 
-Bring it up:
+Bring it up — either from the terminal:
 
 ```bash
 containerlab deploy -t topology.clab.yml
 ```
+
+…or, if you set up the VS Code containerlab extension in §3e: open the **Containerlab** view in the Activity Bar, right-click `topology.clab.yml`, and select **Deploy**. Same result, less typing. (Either way, learn the CLI form too — CI pipelines and SSH-only sessions will need it.)
 
 This takes ~2 minutes the first time (cEOS is slow to boot). On success you get a table:
 
