@@ -1,0 +1,19 @@
+---
+# Connection settings (lab only — use ansible-vault in production)
+ansible_connection: ansible.netcommon.httpapi
+ansible_network_os: arista.eos.eos
+ansible_httpapi_use_ssl: true
+ansible_httpapi_validate_certs: false
+ansible_user: admin
+ansible_password: admin
+ansible_become: true
+ansible_become_method: enable
+
+# Management defaults
+mgmt_interface: Management0
+mgmt_interface_vrf: default
+mgmt_gateway: 172.20.20.1
+
+# DNS / NTP
+name_servers:
+  - 8.8.8.8

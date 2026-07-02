@@ -1,0 +1,16 @@
+---
+tenants:
+  - name: TENANT_A
+    mac_vrf_vni_base: 10000
+    vrfs:
+      - name: VRF_PROD
+        vrf_vni: 100
+        svis:
+          - id: 100
+            name: USERS
+            ip_address_virtual: 10.1.100.1/24
+            tags: [DC1_L3_LEAVES]
+          - id: 110
+            name: SERVERS
+            ip_address_virtual: 10.1.110.1/24
+            tags: [DC1_L3_LEAVES]

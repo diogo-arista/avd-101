@@ -1,0 +1,25 @@
+---
+type: l3leaf
+
+l3leaf:
+  defaults:
+    platform: cEOS-lab
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 4096
+    loopback_ipv4_pool: 10.255.0.0/24
+    vtep_loopback_ipv4_pool: 10.255.1.0/24
+    uplink_switches: [spine1, spine2]
+    uplink_interfaces: [Ethernet1, Ethernet2]
+    mlag_interfaces: [Ethernet3, Ethernet4]
+  node_groups:
+    - group: RACK1
+      bgp_as: 65101
+      nodes:
+        - name: leaf1
+          id: 1
+          mgmt_ip: 172.20.20.4/24
+          uplink_switch_interfaces: [Ethernet1, Ethernet1]
+        - name: leaf2
+          id: 2
+          mgmt_ip: 172.20.20.5/24
+          uplink_switch_interfaces: [Ethernet2, Ethernet2]

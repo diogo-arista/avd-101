@@ -96,7 +96,6 @@ curl -sk -u admin:admin https://172.20.20.3/command-api -d @req-multi.json \
   "params": {
     "version": 1,
     "cmds": [
-      "enable",
       "configure",
       "interface Ethernet1",
       "description provisioned-via-eapi",
@@ -109,6 +108,8 @@ curl -sk -u admin:admin https://172.20.20.3/command-api -d @req-multi.json \
   "id": 1
 }
 ```
+
+eAPI commands already run in privileged mode — no `enable` needed in the `cmds` list.
 
 Response (on success): an empty `result` list of dicts, no error.
 
@@ -126,7 +127,6 @@ curl -sk -u admin:admin https://172.20.20.3/command-api -d '{
 
 ```json
 "cmds": [
-  "enable",
   "configure session avd-001",
   "interface Ethernet1",
   "description provisioned-via-eapi",
@@ -182,14 +182,14 @@ pip install pyeapi
 # scripts/hello_eapi.py
 import pyeapi
 
-node = pyeapi.connect(
+conn = pyeapi.connect(
     transport="https",
     host="172.20.20.3",
     username="admin",
     password="admin",
     port=443,
-    return_node=True,
 )
+node = pyeapi.client.Node(conn)
 
 result = node.enable("show version")
 print(result[0]["result"]["version"])
@@ -271,8 +271,9 @@ DEVICES = ["172.20.20.2", "172.20.20.3", "172.20.20.4", "172.20.20.5"]
 
 rows = []
 for ip in DEVICES:
-    node = pyeapi.connect(transport="https", host=ip,
-                          username="admin", password="admin", return_node=True)
+    conn = pyeapi.connect(transport="https", host=ip,
+                          username="admin", password="admin")
+    node = pyeapi.client.Node(conn)
     ver = node.enable("show version")[0]["result"]
     host = node.enable("show hostname")[0]["result"]["hostname"]
     rows.append((host, ip, ver["version"], ver["modelName"]))
@@ -298,8 +299,9 @@ import pyeapi
 DEVICES = [f"172.20.20.{i}" for i in (2, 3, 4, 5)]
 
 def get_version(ip):
-    node = pyeapi.connect(transport="https", host=ip,
-                          username="admin", password="admin", return_node=True)
+    conn = pyeapi.connect(transport="https", host=ip,
+                          username="admin", password="admin")
+    node = pyeapi.client.Node(conn)
     return ip, node.enable("show version")[0]["result"]["version"]
 
 with ThreadPoolExecutor(max_workers=20) as ex:
@@ -326,7 +328,9 @@ Useful shows (all return rich JSON):
 | `show lldp neighbors` | LLDP topology |
 | `show running-config` | Full config as text (in `output` field even with json format) |
 
-⚠ `show running-config` is one of the few that doesn't have a true JSON form — you get the text. For structured config, use `show running-config | json` (which works at the CLI level) or use the structured config from AVD instead.
+⚠ `show running-config` is one of the few that doesn't have a true JSON form — you get the text back as a single string. For structured config data, use individual `show` commands with `"format": "json"` or use the structured config from AVD instead.
+
+> **Tip:** Every EOS device with eAPI enabled has a built-in **Command Explorer** at `https://<switch-ip>/explorer`. It lets you type CLI commands and instantly see the JSON-RPC request/response — the fastest way to learn eAPI interactively.
 
 ## 10. Security and ops considerations
 
@@ -366,13 +370,14 @@ In `labs/10-eapi/`:
 
 1. **`curl` warm-up**: write a request that runs `show lldp neighbors` against `leaf1` and extracts just the neighbor hostnames using `jq`.
 
-2. **Multi-command request**: combine `show hostname`, `show ip route summary`, `show bgp neighbors summary` in one request. Parse out the `summaryStats.uniqueRoutes` from the route summary.
+2. **Multi-command request**: combine `show hostname`, `show ip route summary`, `show ip bgp summary` in one request. Parse out the `summaryStats.uniqueRoutes` from the route summary.
 
 3. **`pyeapi` exploration**:
    ```python
    import pyeapi
-   node = pyeapi.connect(host="172.20.20.3", username="admin",
-                         password="admin", transport="https", return_node=True)
+   conn = pyeapi.connect(host="172.20.20.3", username="admin",
+                         password="admin", transport="https")
+   node = pyeapi.client.Node(conn)
    # interactively introspect:
    r = node.enable("show interfaces status")
    print(r[0]["result"]["interfaceStatuses"]["Ethernet1"])

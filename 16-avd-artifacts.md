@@ -212,7 +212,7 @@ git diff intended/structured_configs/  # what AVD recomputed under the hood
 diff -u snapshots/20260520T140000/DC1-LEAF1A.cfg intended/configs/DC1-LEAF1A.cfg | less
 ```
 
-### EOS-side: `show configuration session diffs`
+### EOS-side: `show session-config diffs`
 
 After AVD's deploy opens a session but before commit, EOS can show the diff between running and the candidate. AVD logs this but you can also peek manually:
 

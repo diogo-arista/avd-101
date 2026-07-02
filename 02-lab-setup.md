@@ -239,6 +239,8 @@ Load the image into Docker and tag it. The tag here is what containerlab and AVD
 ```bash
 docker import ~/Downloads/cEOS64-lab-4.32.5.1M-arm64.tar.xz ceos:4.32.5.1M
 docker images | grep ceos
+# If `docker import` fails with a format error, try `docker load -i` instead —
+# the correct command depends on how Arista packaged the specific release.
 ```
 
 You should see `ceos    4.32.5.1M    <hash>    <size>`.
@@ -284,7 +286,7 @@ topology:
 A few things to notice:
 - **`kind`** tells containerlab what driver to use. `arista_ceos` knows how to bootstrap cEOS properly (sets the right boot env, handles the management interface, etc.).
 - **`endpoints`** are veth pairs between two device interfaces. `eth1` on a cEOS container maps to `Ethernet1` inside EOS.
-- **No management IPs specified.** containerlab puts every node on a Docker bridge (`clab` network) and gives them DHCP — typically `172.20.20.0/24`.
+- **No management IPs specified.** containerlab puts every node on a Docker bridge (`clab` network) and assigns them static IPs from its management pool — typically `172.20.20.0/24`.
 
 Bring it up — either from the terminal:
 
@@ -398,13 +400,13 @@ You'll be rebuilding this lab a lot. Useful commands:
 
 ```bash
 # Stop and remove the topology (keeps the topology.clab.yml file)
-containerlab destroy -t ~/labs/avd-tour/topology.clab.yml
+containerlab destroy -t labs/02-first-fabric/topology.clab.yml
 
 # Stop and *remove the per-node state directory* (clab-avd-tour/)
-containerlab destroy -t ~/labs/avd-tour/topology.clab.yml --cleanup
+containerlab destroy -t labs/02-first-fabric/topology.clab.yml --cleanup
 
 # Bring it back
-containerlab deploy -t ~/labs/avd-tour/topology.clab.yml
+containerlab deploy -t labs/02-first-fabric/topology.clab.yml
 
 # Restart a single node
 docker restart clab-avd-tour-leaf1

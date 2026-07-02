@@ -1,0 +1,16 @@
+---
+# Port profiles — reusable templates for server connections
+port_profiles:
+  - profile: SERVER_TRUNK
+    mode: trunk
+    vlans: "100,110"
+    spanning_tree_portfast: edge
+
+# Add server entries here as you work through the exercises
+# servers:
+#   - name: server01
+#     adapters:
+#       - endpoint_ports: [eth0]
+#         switch_ports: [Ethernet5]
+#         switches: [leaf1]
+#         profile: SERVER_TRUNK

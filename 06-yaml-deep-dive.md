@@ -83,7 +83,7 @@ svis:
     ip_address_virtual: 10.1.200.1/24
   - id: 300
     name: GUEST
-    ip_address_virtual: 10.1.300.1/24
+    ip_address_virtual: 10.1.30.1/24
 ```
 
 Read it as: "`svis` is a list of three dicts; each dict has `id`, `name`, `ip_address_virtual`."
@@ -250,7 +250,7 @@ node_groups:
     nodes:
       - leaf1
       - leaf2
-    mlag: true              # ❌ aligned with the `-`, not with `name`
+  mlag: true                # ❌ aligned with the `-`, not with `name` — this is a sibling of the list item, not a key inside it
 ```
 
 Should be:
@@ -261,7 +261,7 @@ node_groups:
     nodes:
       - leaf1
       - leaf2
-    mlag: true              # ✅ same indent as `name` and `nodes`
+    mlag: true              # ✅ same indent as `name` and `nodes` — inside the list item
 ```
 
 ### Stringy version numbers becoming floats

@@ -132,7 +132,7 @@ Chain them:
 {{ value is arista.avd.defined }}           {# AVD's "defined and not None" test #}
 ```
 
-Most "networking" filters come from Ansible (`ansible.utils.ipaddr`, `community.general.netaddr`) or AVD's own filter library (`arista.avd.natural_sort`, `arista.avd.range_expand`, etc.).
+Most "networking" filters come from the `ansible.utils` collection (`ansible.utils.ipaddr`) or AVD's own filter library (`arista.avd.natural_sort`, `arista.avd.range_expand`, etc.).
 
 ## 6. Conditionals
 
@@ -369,7 +369,7 @@ It looks intimidating but the building blocks are all in this chapter.
 | **Test** | An `is`-applied check: `{% if x is defined %}`. |
 | **Macro** | A reusable block (like a function). |
 | **Block** | A named section in a base template that children can override. |
-| **Strict mode** | Jinja config where referencing an undefined variable raises (Ansible's `strict_concurrency` does this too). |
+| **Strict mode** | Jinja config where referencing an undefined variable raises (Ansible's `jinja2_undefined: StrictUndefined` setting does this). |
 | **Autoescape** | HTML-safety feature; we leave it off for config generation. |
 
 ---

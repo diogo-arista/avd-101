@@ -6,7 +6,7 @@ We've named-dropped Ansible repeatedly. Time to learn it properly.
 
 ## 1. What Ansible is
 
-Ansible is a **declarative orchestration engine** that runs tasks against a list of target machines (your **inventory**), driven by YAML files called **playbooks**, with logic factored into reusable **roles** distributed as **collections**.
+Ansible is a **task-based automation engine** that runs tasks *in order* against a list of target machines (your **inventory**), driven by YAML files called **playbooks**, with logic factored into reusable **roles** distributed as **collections**.
 
 Two design choices that make it dominant in network shops:
 

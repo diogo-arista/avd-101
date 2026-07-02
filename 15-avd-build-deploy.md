@@ -272,7 +272,7 @@ Repeat for every change. Every commit is a snapshot; every PR has a config diff;
 
 1. Edit `inventory.yml` to remove the hosts.
 2. Remove from `group_vars/DC1_L3_LEAVES.yml`.
-3. `build.yml` → orphaned `.cfg` files in `intended/configs/` are deleted; adjacent devices' configs lose references to the removed device.
+3. `build.yml` → adjacent devices' configs lose references to the removed device. Note: orphaned `.cfg` files for the removed device remain on disk — clean them up manually (`git clean -f intended/`) or delete them by hand.
 4. Deploy adjacent devices first (clean up first), then `wr erase`/`reload` the removed device.
 
 ## 11. Tags and `--limit`: subset operations

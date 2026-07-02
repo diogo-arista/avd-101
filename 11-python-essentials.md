@@ -237,8 +237,9 @@ DEVICES = {
 }
 
 def get_peers(name, ip):
-    node = pyeapi.connect(host=ip, username="admin", password="admin",
-                          transport="https", return_node=True)
+    conn = pyeapi.connect(host=ip, username="admin", password="admin",
+                          transport="https")
+    node = pyeapi.client.Node(conn)
     r = node.enable("show ip bgp summary")[0]["result"]
     peers = r["vrfs"]["default"].get("peers", {})
     return name, [(p, info["peerState"]) for p, info in peers.items()]
@@ -333,8 +334,9 @@ You don't have to *write* this style of plugin code to use AVD. But being able t
 6. **REPL exploration**: `ipython`, then:
    ```python
    import pyeapi
-   node = pyeapi.connect(host="172.20.20.3", username="admin",
-                         password="admin", transport="https", return_node=True)
+   conn = pyeapi.connect(host="172.20.20.3", username="admin",
+                         password="admin", transport="https")
+   node = pyeapi.client.Node(conn)
    r = node.enable("show interfaces")
    r?              # IPython: open docs
    type(r)

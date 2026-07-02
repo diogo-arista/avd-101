@@ -1,0 +1,5 @@
+---
+design:
+  type: l3ls-evpn
+
+fabric_name: DC1

@@ -4,6 +4,8 @@
 
 This is where everything before clicks. Have your VS Code Remote-SSH window open into `avdlab@orb`, with the curriculum repo loaded.
 
+> ⚠ **Version note:** the YAML examples in this chapter use the AVD 4.x data model (`design.type`, `spine:`, `l3leaf:` top-level keys). If you're running AVD 5.x (`arista.avd >= 5.0.0`), some keys have been reorganized — check the [AVD release notes](https://avd.arista.com) for migration guidance. The concepts (group inheritance, tenant model, structured config override) are the same across versions; only a few key names differ.
+
 ## 1. The AVD project repo layout (recap)
 
 From [chapter 01 §2](01-avd-guided-tour.md):
@@ -235,7 +237,7 @@ What AVD does with this:
 
 - For each SVI, computes the L2 VNI (typically `mac_vrf_vni_base + svi_id`).
 - Sets RD = `<router_id>:<vni>`.
-- Sets RT both = `<asn>:<vni>`.
+- Sets RT both = `<vni>:<vni>`.
 - Adds the SVI + VLAN + L2 VNI + EVPN config on every leaf whose `node.tags` matches the SVI's `tags`.
 - Adds the VRF + RD + RT on every leaf where any of its SVIs are deployed.
 

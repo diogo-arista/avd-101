@@ -84,7 +84,7 @@ leaf2 :: VerifyBGPSpecificPeers :: FAILURE
    peer 10.255.255.1 vrf default state=Idle (expected Established)
 ```
 
-Other output modes: `table`, `json`, `markdown` — useful for piping into reports or CI logs.
+Other output modes: `table`, `json`, `md-report`, `csv` — useful for piping into reports or CI logs.
 
 ## 3. The built-in test catalog
 
@@ -229,9 +229,10 @@ ANTA can emit:
 - `text` (default, human)
 - `table` (terminal table)
 - `json` (machine-readable; pipe into `jq`)
-- `markdown` (great for PR comments and reports)
+- `md-report` (Markdown; great for PR comments and reports)
+- `csv` (spreadsheet-friendly)
 
-In CI (chapter 18) you'll typically run ANTA with `--output json` and feed the result into:
+In CI (chapter 18) you'll typically run `anta nrfu json` and feed the result into:
 - A *quality gate* — fail the build if any test failed.
 - A *report uploader* — attach the markdown to the PR or Slack channel.
 
@@ -306,7 +307,7 @@ Most failures fall into a small handful of patterns: BGP peer down (cabling/stat
 
 4. **Custom ANTA test**: write a simple `VerifyHostname` test class that checks the device's hostname matches inventory_hostname. Add it to a catalog file. Run.
 
-5. **Markdown output for CI**: `anta nrfu --output markdown > /tmp/report.md` and open it. This is what we'll feed into PR comments in chapter 18.
+5. **Markdown output for CI**: `anta nrfu md-report --md-output /tmp/report.md` and open it. This is what we'll feed into PR comments in chapter 18.
 
 6. **Browse the ANTA docs**: <https://anta.arista.com>. Read one test category's API page (e.g., `anta.tests.routing.bgp`) and pick three tests you'd add to a continuous-monitoring catalog.
 

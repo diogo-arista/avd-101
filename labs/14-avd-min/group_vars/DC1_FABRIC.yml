@@ -1,0 +1,26 @@
+---
+# ASN allocation
+spine:
+  bgp_as: 65100
+l3leaf:
+  defaults:
+    bgp_as: 65101
+
+# Loopback ranges
+loopback_ipv4_pool: 10.255.0.0/24
+vtep_loopback_ipv4_pool: 10.255.1.0/24
+
+# P2P spine-leaf interconnect
+underlay_routing_protocol: ebgp
+fabric_ip_addressing:
+  p2p_uplinks_ip_pool: 10.255.255.0/24
+
+# MLAG peer-link addressing
+mlag_ips:
+  leaf_peer_l3:
+    ipv4_pool: 10.255.252.0/24
+  peer_link:
+    ipv4_pool: 10.255.253.0/24
+
+# Defaults
+p2p_uplinks_mtu: 9214

@@ -1,0 +1,11 @@
+---
+- name: Deploy AVD configs via eAPI
+  hosts: FABRIC
+  gather_facts: false
+  connection: ansible.netcommon.httpapi
+  collections:
+    - arista.avd
+  tasks:
+    - name: Deploy config to device
+      ansible.builtin.import_role:
+        name: arista.avd.eos_config_deploy_eapi

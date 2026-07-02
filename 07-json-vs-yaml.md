@@ -32,7 +32,7 @@ You can think of JSON as **YAML's machine-readable cousin**: same data model (sc
 }
 ```
 
-The four types and their syntax:
+The six types and their syntax:
 
 | Type | JSON syntax | YAML equivalent |
 |---|---|---|

@@ -198,10 +198,9 @@ jobs:
       - name: Post diff comment
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
           echo "${{ steps.diff.outputs.diff }}" | gh pr comment "$PR_URL" --body-file -
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
 ```
 
 This is a simplified version of what production AVD repos do. Often this comment is auto-updated on every push.

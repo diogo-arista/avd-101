@@ -1,0 +1,14 @@
+---
+type: spine
+
+spine:
+  defaults:
+    platform: cEOS-lab
+    loopback_ipv4_pool: 10.255.0.0/24
+  nodes:
+    - name: spine1
+      id: 1
+      mgmt_ip: 172.20.20.2/24
+    - name: spine2
+      id: 2
+      mgmt_ip: 172.20.20.3/24

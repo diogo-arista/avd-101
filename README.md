@@ -46,7 +46,7 @@ Every chapter is sized for ~30-60 minutes of reading plus a hands-on exercise on
 ## Hands-on labs
 
 - **[labs/02-first-fabric](labs/02-first-fabric/)** — minimal 2-spine, 2-leaf containerlab topology (chapter 02 §7).
-- **`labs/14-avd-min/`** — your first AVD project, built across chapters 14–17 (exercises).
+- **[labs/14-avd-min](labs/14-avd-min/)** — your first AVD project, built across chapters 14–17 (exercises).
 
 ## Prerequisites
 
@@ -69,6 +69,10 @@ You do **not** need to know Python, Ansible, Git, or Linux beyond surface level 
 ```bash
 git clone https://github.com/diogo-arista/avd-101.git
 cd avd-101
+
+# Install required Ansible collections
+ansible-galaxy collection install -r requirements.yml
+
 # Start with chapter 00:
 open 00-network-automation-101.md   # macOS
 # or just open the folder in VS Code:
